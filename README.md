@@ -19,7 +19,7 @@ If you don't have root access, you can do like that:
 ```sh
 mkdir $HOME/bin
 wget https://raw.githubusercontent.com/esin/kubectlsafe/master/kubectl-safe -O $HOME/bin/kubectl-safe
-sudo chmod +x $HOME/bin/kubectl-safe
+chmod +x $HOME/bin/kubectl-safe
 echo "alias kubectl='kubectl safe'" >> $HOME/.bashrc
 . $HOME/.basrc
 ```
