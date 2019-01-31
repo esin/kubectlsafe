@@ -1,5 +1,5 @@
 # kubectlsafe
-Safe run operations in Kubernetes
+Plugin for kubectl for safe write operations in Kubernetes
 
 Before every write (apply, create, etc...) operation kubectl will ask you about you choise
 
