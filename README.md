@@ -17,5 +17,13 @@ That's all
 
 ```sh
 andrey@andreypc:$ kubectl delete pod nginx-549cfdbc34-jdos4
-Current context is kube-prod. Show must go on? y
+Current context is kube-prod. Show must go on? y #Only after that operation will begin
+pod "nginx-549cfdbc34-jdos4" deleted
 ```
+
+
+#### Contributions
+
+Feel free to ask questions and apply new ideas
+
+Happy kubectling! :)
