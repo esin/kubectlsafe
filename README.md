@@ -29,7 +29,7 @@ That's all
 #### Example
 
 ```sh
-andrey@andreypc:$ kubectl delete pod nginx-549cfdbc34-jdos4
+andrey@andreypc:~$ kubectl delete pod nginx-549cfdbc34-jdos4
 Current context is kube-prod. Show must go on? y #Only after that operation will begin
 pod "nginx-549cfdbc34-jdos4" deleted
 ```
