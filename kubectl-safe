@@ -6,7 +6,7 @@ if [ -z $1 ] || [ "x$1" == "x" ]; then
   exit 0
 fi
 
-if [ $1 == "apply" ] || [ $1 == "create" ] || [ $1 == "delete" ] || [ $1 == "edit" ] || [ $1 == "patch" ] || [ $1 == "replace" ]; then
+if [ $1 == "apply" ] || [ $1 == "create" ] || [ $1 == "delete" ] || [ $1 == "edit" ] || [ $1 == "patch" ] || [ $1 == "replace" ] || [ $1 == "scale" ]; then
   cc=$($kubectlbin config current-context);
   read -p $'Current context is \e[1m'$cc$'\e[0m. Show must go on? [y/N] ' -n1 -r
   echo
