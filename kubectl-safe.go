@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
 	"path"
 	"path/filepath"
 	"strings"
@@ -28,27 +30,52 @@ func findKubectlBinary() string {
 			}
 			return nil
 		})
-		//log.Println(err)
 	}
-	fmt.Printf("Found kubectl here: %s\n", kubectlBinary)
+	//fmt.Printf("Found kubectl here: %s\n", kubectlBinary)
 	return kubectlBinary
 }
 
 func main() {
-	// argsWithoutProg := os.Args[1:]
+	if len(os.Args) <= 1 {
+		os.Exit(1)
+	}
 
-	// fmt.Println(argsWithoutProg)
-	findKubectlBinary()
+	var writeCommands = []string{"apply", "create", "delete", "edit", "patch", "replace", "scale"}
+
+	argsList := os.Args[1:]
+
+	for _, kubeCommand := range writeCommands {
+		// for example kubectl apply ......
+		if kubeCommand == argsList[0] {
+			kubectlBin := findKubectlBinary()
+
+			if kubectlBin == "" {
+				os.Exit(1)
+			}
+
+			cmd := exec.Command(kubectlBin, "config", "current-context")
+			var outb, errb bytes.Buffer
+			cmd.Stdout = &outb
+			cmd.Stderr = &errb
+			err := cmd.Run()
+			if err != nil {
+				fmt.Print(errb.String())
+				os.Exit(2)
+			}
+
+			fmt.Println("out:", outb.String(), "err:", errb.String())
+		}
+	}
 
 }
 
 /*
 
-kubectlbin="/usr/bin/kubectl"
+// kubectlbin="/usr/bin/kubectl"
 
-if [ -z $1 ] || [ "x$1" == "x" ]; then
-  exit 0
-fi
+// if [ -z $1 ] || [ "x$1" == "x" ]; then
+//   exit 0
+// fi
 
 if [ $1 == "apply" ] || [ $1 == "create" ] || [ $1 == "delete" ] || [ $1 == "edit" ] || [ $1 == "patch" ] || [ $1 == "replace" ]; then
   cc=$($kubectlbin config current-context);
