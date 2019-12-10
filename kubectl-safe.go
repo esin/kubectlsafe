@@ -14,6 +14,10 @@ func getEnvironmentPath() string {
 	return os.Getenv("PATH")
 }
 
+func boldString(inString string) string {
+	return "\033[1m" + inString + "\033[0m"
+}
+
 func findKubectlBinary() string {
 	pathDirs := strings.Split(getEnvironmentPath(), ":")
 	kubectlBinary := ""
@@ -31,7 +35,6 @@ func findKubectlBinary() string {
 			return nil
 		})
 	}
-	//fmt.Printf("Found kubectl here: %s\n", kubectlBinary)
 	return kubectlBinary
 }
 
@@ -45,6 +48,7 @@ func main() {
 	argsList := os.Args[1:]
 
 	for _, kubeCommand := range writeCommands {
+
 		// for example kubectl apply ......
 		if kubeCommand == argsList[0] {
 			kubectlBin := findKubectlBinary()
@@ -53,38 +57,33 @@ func main() {
 				os.Exit(1)
 			}
 
-			cmd := exec.Command(kubectlBin, "config", "current-context")
-			var outb, errb bytes.Buffer
+			// Get current context. TODO: try to use config parser from kubectl
+			cmd := exec.Command(kubectlBin, "config1", "current-context")
+			var outb bytes.Buffer
 			cmd.Stdout = &outb
-			cmd.Stderr = &errb
+			cmd.Stderr = os.Stderr
 			err := cmd.Run()
 			if err != nil {
-				fmt.Print(errb.String())
-				os.Exit(2)
+				os.Exit(1)
 			}
 
-			fmt.Println("out:", outb.String(), "err:", errb.String())
+			currentContext := strings.TrimSuffix(outb.String(), "\n")
+
+			var userChoise string
+			fmt.Printf("Current context is %s. Show must go on? [y/N] ", currentContext) // for Windows
+			n, err := fmt.Scanf("%s", &userChoise)
+			if err != nil || n != 1 {
+				os.Exit(1)
+			}
+
+			if (strings.ToLower(userChoise) == "y") || (strings.ToLower(userChoise) == "yes") {
+				cmd := exec.Command(kubectlBin, argsList...)
+				cmd.Stdout = os.Stdout
+				cmd.Stdin = os.Stdin
+				cmd.Stderr = os.Stderr
+				cmd.Run()
+			}
+			os.Exit(0)
 		}
 	}
-
 }
-
-/*
-
-// kubectlbin="/usr/bin/kubectl"
-
-// if [ -z $1 ] || [ "x$1" == "x" ]; then
-//   exit 0
-// fi
-
-if [ $1 == "apply" ] || [ $1 == "create" ] || [ $1 == "delete" ] || [ $1 == "edit" ] || [ $1 == "patch" ] || [ $1 == "replace" ]; then
-  cc=$($kubectlbin config current-context);
-  read -p $'Current context is \e[1m'$cc$'\e[0m. Show must go on? [y/N] ' -n1 -r
-  echo
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
-    $kubectlbin $@
-    exit 0
-  fi
-else
-  $kubectlbin $@
-fi */
