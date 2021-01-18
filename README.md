@@ -1,12 +1,12 @@
 # kubectlsafe
-Plugin for kubectl for safe write operations in Kubernetes
+Plugin for `kubectl` for safe write operations in Kubernetes
 
-Before every write (apply, create, etc...) operation kubectl will ask you about you choise
+Before every write (apply, create, etc...) operation, `kubectl` will ask you about your choice
 
 #### Installation
 It's simple as 1, 2, 3:
 
-Download kubectl-safe to /usr/local/bin, add eXecutable bit and add to your aliases
+Download kubectl-safe to `/usr/local/bin`, add eXecutable bit and add to your aliases
 
 ```sh
 sudo wget https://raw.githubusercontent.com/esin/kubectlsafe/master/kubectl-safe -O /usr/local/bin/kubectl-safe
@@ -15,7 +15,7 @@ echo "alias kubectl='kubectl safe'" >> $HOME/.bashrc
 . $HOME/.basrc
 ```
 
-If you don't have root access, you can do like that:
+If you don't have root access, you can do like this:
 ```sh
 mkdir $HOME/bin
 wget https://raw.githubusercontent.com/esin/kubectlsafe/master/kubectl-safe -O $HOME/bin/kubectl-safe
